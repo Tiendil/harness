@@ -1,0 +1,18 @@
+
+[dotfiles."AGENTS.md"]
+source = ".harness/AGENTS.md.tera"
+mode = "template"
+permissions = "0644"
+variants = [
+  { default = true, target = "{{ config_root }}/AGENTS.md" },
+]
+
+[tasks."harness:agents.md:generate"]
+description = "Regenerate AGENTS.md"
+dir = "{{ config_root }}"
+run = 'mise dot apply --yes "{{ config_root }}/AGENTS.md"'
+
+[tasks."harness:generate"]
+description = "Regenerate AGENTS.md"
+dir = "{{ config_root }}"
+depends = ["harness:agents.md:generate"]
