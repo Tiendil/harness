@@ -122,6 +122,8 @@ A callout SHOULD demonstrate the observable consequence of the surrounding requi
 It SHOULD NOT merely replace abstract names with invented names while repeating the same statement.
 A specification MAY omit a callout when the requirement is already concrete and adding one would not resolve a plausible ambiguity.
 
+Examples SHOULD NOT serve as inventories of current artifacts, instances, or working arrangements.
+
 Examples and counterexamples MAY use invented names, quantities, and times, but those illustrative values MUST NOT define:
 
 - required representations.
@@ -189,7 +191,8 @@ Conceptual wording SHOULD be chosen to remain accurate across reasonable changes
 An extensible concept's definition MUST state its semantic meaning, distinguishing invariants, or membership criteria rather than rely only on an enumeration of current instances.
 An enumeration MAY supplement an extensible definition, but it MUST NOT substitute for it.
 
-An exhaustive enumeration MAY define a set when the set is intentionally closed and its membership is part of the contract.
+Specifications MUST use an exhaustive enumeration only when the set is intentionally closed and its completeness is part of a stable contract.
+An exhaustive enumeration MAY define such a set.
 Examples of members in an extensible set MUST be identified as non-exhaustive.
 
 Adding, changing, or removing an instance of an extensible concept SHOULD NOT require changing the concept's definition unless its invariants or membership criteria change.

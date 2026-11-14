@@ -42,7 +42,7 @@ Here the independent review decision is the release gate being defined, so the p
 
 A specification MAY recommend a durable project-wide practice when it promotes a stated project-wide quality, even when alternative methods can satisfy the same requirements.
 A recommended practice MUST use `SHOULD` or `SHOULD NOT`, MUST state its intended benefit, and MUST permit justified exceptions.
-Specifications MUST NOT present a local, temporary, or purely stylistic preference as sufficient justification for a project-wide recommendation.
+Specifications MUST NOT present a local, temporary, or purely stylistic preference as a project-wide practice.
 
 **Example:** A publication workflow may state that reviewers `SHOULD` use a checklist to reduce missed corrections, while permitting an equivalent review process that checks the same criteria.
 
