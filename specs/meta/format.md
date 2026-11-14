@@ -93,6 +93,13 @@ Terms that are used by multiple specifications SHOULD be defined in `./specs/dic
 - Specifications MUST follow [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
 - Specifications MUST NOT break long lines to fit within 80 characters or any other number; they MUST use as many characters as needed to express the idea clearly.
 - When a prose statement names four or more distinct items, those items SHOULD be formatted as a Markdown list rather than inline prose.
+- Specifications SHOULD use Markdown lists for simple enumerations, including terms with definitions and named items with descriptions or a few associated properties.
+- Tables SHOULD be used only when alignment across rows and columns materially helps readers compare items or understand relationships.
+- Having multiple properties per item MUST NOT by itself justify a table; those properties MAY be expressed within list items or nested lists.
+- Formatting choices SHOULD favor readability of Markdown source and clarity of diffs over compactness of the rendered document.
+
+**Example:** Terms with definitions, or configuration fields with defaults and descriptions, ordinarily belong in lists.
+A comparison of supported capabilities across output formats may justify a table.
 
 Each sentence in a prose paragraph MUST be written on a separate Markdown source line.
 Consecutive sentence lines MUST NOT be separated by a blank line when they belong to the same paragraph.
