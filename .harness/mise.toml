@@ -1,0 +1,94 @@
+[vars]
+harness_repo_root = "{{ config_root | dirname | canonicalize }}"
+
+[dotfiles."AGENTS.md"]
+source = "AGENTS.md.tera"
+mode = "template"
+permissions = "0644"
+variants = [
+  { default = true, target = "{{ cwd }}/AGENTS.md" },
+]
+
+[tasks."harness:load"]
+description = "Update shared harness"
+dir = "{{ vars.harness_project_root }}"
+run = '''
+set -eu
+
+if [ {{ vars.harness_repo_root | quote }} = {{ vars.harness_project_root | quote }} ]; then
+  exit 0
+fi
+
+mise bootstrap repos update --yes {{ vars.harness_repo_root | quote }}
+'''
+
+[tasks."harness:agents.md:generate"]
+description = "Regenerate AGENTS.md"
+dir = "{{ vars.harness_project_root }}"
+depends = ["harness:specs:install"]
+run = [
+  'python3 {{ vars.harness_repo_root | quote }}/bin/validate-agents-md-fragments.py',
+  'mise dot apply --yes {{ vars.harness_project_root | quote }}/AGENTS.md',
+  '''
+generated_agents="$(cog -d {{ vars.harness_project_root | quote }}/AGENTS.md)" &&
+printf '%s\n' "$generated_agents" > {{ vars.harness_project_root | quote }}/AGENTS.md
+''',
+]
+
+[tasks."harness:skills:install"]
+description = "Install shared harness skills"
+dir = "{{ vars.harness_project_root }}"
+env = { HARNESS_SKILLS = '{{ read_toml(path=vars.harness_project_root ~ "/.harness/config.toml")["skills"] | default(value=[]) | join(sep="\n") }}' }
+run = '''
+set -eu
+
+if [ {{ vars.harness_repo_root | quote }} = {{ vars.harness_project_root | quote }} ]; then
+  exit 0
+fi
+
+mkdir -p .agents/skills
+
+printf '%s\n' "$HARNESS_SKILLS" |
+  rsync --archive --recursive --itemize-changes \
+    --files-from=- \
+    -- \
+    {{ vars.harness_repo_root | quote }}/.agents/skills/ \
+    .agents/skills/
+'''
+
+[tasks."harness:specs:install"]
+description = "Install selected shared harness specifications"
+dir = "{{ vars.harness_project_root }}"
+env = { HARNESS_SPECS = '{{ read_toml(path=vars.harness_project_root ~ "/.harness/config.toml")["specs"] | default(value=[]) | join(sep="\n") }}' }
+run = '''
+set -eu
+
+if [ {{ vars.harness_repo_root | quote }} = {{ vars.harness_project_root | quote }} ]; then
+  exit 0
+fi
+
+mkdir -p specs
+
+printf '%s\n' "$HARNESS_SPECS" |
+  rsync --archive --relative --itemize-changes \
+    --files-from=- \
+    -- \
+    {{ vars.harness_repo_root | quote }}/specs/ \
+    specs/
+'''
+
+[tasks."harness:generate"]
+description = "Regenerate harness"
+dir = "{{ vars.harness_project_root }}"
+depends = [
+  "harness:agents.md:generate",
+  "harness:skills:install"
+]
+
+[tasks."harness:initialize"]
+description = "Initialize harness"
+dir = "{{ vars.harness_project_root }}"
+run = [
+  "mise run harness:load",
+  "mise run harness:generate"
+]

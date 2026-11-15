@@ -1,4 +1,4 @@
-{% set fragments = read_toml(path=".harness/config.toml")["agents_md"]["fragments"] -%}
+{% set fragments = read_toml(path=cwd ~ "/.harness/config.toml")["agents_md"]["fragments"] -%}
 {% for fragment in fragments %}
-{{ read_file(path=fragment) | trim }}
+{{ read_file(path=cwd ~ "/" ~ fragment) | trim }}
 {% endfor %}
