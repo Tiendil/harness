@@ -26,25 +26,29 @@ Here is a list of available workflows.
 import json
 import shlex
 import subprocess
+from pathlib import Path
 
 import cog
 
-result = subprocess.run(
-    ["donna", "-p", "automation", "list"],
-    check=True,
-    capture_output=True,
-    text=True,
-)
-for line in result.stdout.splitlines():
-    workflow = json.loads(line)
-    if workflow.get("artifact_kind") != "donna.lib.workflow":
-        continue
-    command = shlex.join(["donna", "-p", "llm", "run", workflow["artifact_id"]])
-    cog.outl(f"#### {workflow['artifact_title']}")
-    cog.outl()
-    cog.outl(f"Run `{command}` to execute the workflow.")
-    cog.outl()
-    cog.outl(workflow["content"])
-    cog.outl()
+if Path("donna.toml").is_file():
+    result = subprocess.run(
+        ["donna", "-p", "automation", "--config", "donna.toml", "list"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    for line in result.stdout.splitlines():
+        workflow = json.loads(line)
+        if workflow.get("artifact_kind") != "donna.lib.workflow":
+            continue
+        command = shlex.join(["donna", "-p", "llm", "run", workflow["artifact_id"]])
+        cog.outl(f"#### {workflow['artifact_title']}")
+        cog.outl()
+        cog.outl(f"Run `{command}` to execute the workflow.")
+        cog.outl()
+        cog.outl(workflow["content"])
+        cog.outl()
+else:
+    cog.outl("No Donna workflows are configured for this repository.")
 ]]] -->
 <!-- [[[end]]] -->

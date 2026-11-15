@@ -1,4 +1,3 @@
-
 [dotfiles."AGENTS.md"]
 source = ".harness/AGENTS.md.tera"
 mode = "template"
@@ -10,9 +9,22 @@ variants = [
 [tasks."harness:agents.md:generate"]
 description = "Regenerate AGENTS.md"
 dir = "{{ config_root }}"
-run = 'mise dot apply --yes "{{ config_root }}/AGENTS.md"'
+run = [
+  'mise dot apply --yes "{{ config_root }}/AGENTS.md"',
+  '''
+generated_agents="$(cog -d "{{ config_root }}/AGENTS.md")" &&
+printf '%s\n' "$generated_agents" > "{{ config_root }}/AGENTS.md"
+''',
+]
 
 [tasks."harness:generate"]
-description = "Regenerate AGENTS.md"
+description = "Regenerate harness"
 dir = "{{ config_root }}"
 depends = ["harness:agents.md:generate"]
+
+[tasks."harness:initialize"]
+description = "Initialize harness"
+dir = "{{ config_root }}"
+run = [
+  "mise run harness:generate"
+]

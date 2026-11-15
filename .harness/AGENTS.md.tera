@@ -31,6 +31,8 @@
 
 {{ read_file(path="agents.md.d/behavior/restrictions/git.md") | trim }}
 
+{{ read_file(path="agents.md.d/specifications.md") | trim }}
+
 {#- CLI tools #}
 
 {{ read_file(path="agents.md.d/cli_tools/intro.md") | trim }}
