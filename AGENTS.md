@@ -118,6 +118,7 @@ This index lists the available specifications and their goals.
 
 - `specs/documentation/changelog.md` — requirements for changelog documentation.
 - `specs/meta/content.md` — requirements for the level of detail in specification contracts.
+- `specs/meta/dictionary.md` — conventions for project-level dictionaries and shared project terminology.
 - `specs/meta/directories.md` — conventions for organizing specification files into subject areas.
 - `specs/meta/format.md` — the structure and style conventions for specifications in this project.
 - `specs/programming/code.md` — conventions for program implementations.
