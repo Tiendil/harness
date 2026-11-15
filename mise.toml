@@ -10,6 +10,7 @@ variants = [
 description = "Regenerate AGENTS.md"
 dir = "{{ config_root }}"
 run = [
+  'python3 bin/validate-agents-md-fragments.py',
   'mise dot apply --yes "{{ config_root }}/AGENTS.md"',
   '''
 generated_agents="$(cog -d "{{ config_root }}/AGENTS.md")" &&

@@ -2,3 +2,29 @@
 index_goal_prefixes_to_remove = [
   "This document describes ",
 ]
+
+fragments = [
+  "agents.md.d/intro.md",
+  "agents.md.d/principles/intro.md",
+  "agents.md.d/principles/fundamentals.md",
+  "agents.md.d/principles/design.md",
+  "agents.md.d/principles/implementation.md",
+  "agents.md.d/behavior/intro.md",
+  "agents.md.d/behavior/reaction_on_developer_commands.md",
+  "agents.md.d/behavior/ask_developer_when.md",
+  "agents.md.d/behavior/working_with_text_artifacts.md",
+  "agents.md.d/behavior/restrictions/intro.md",
+  "agents.md.d/behavior/restrictions/project.md",
+  "agents.md.d/behavior/restrictions/dependencies.md",
+  "agents.md.d/behavior/restrictions/docker.md",
+  "agents.md.d/behavior/restrictions/git.md",
+  "agents.md.d/specifications.md",
+  "agents.md.d/cli_tools/intro.md",
+  "agents.md.d/cli_tools/donna.md",
+  "agents.md.d/cli_tools/depmesh.md",
+  "agents.md.d/cli_tools/ast-grep.md",
+  "agents.md.d/cli_tools/rg.md",
+  "agents.md.d/cli_tools/difftastic.md",
+]
+
+skipped_fragments = []
