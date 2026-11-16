@@ -130,6 +130,25 @@ These CLI tools MUST have the highest priority when an agent is deciding which t
 
 You MUST run all listed tools on the host machine unless explicitly instructed to run them in other ways (in a Docker container, in a virtual environment, etc.).
 
+### `mise`
+
+Use mise to discover and run project tasks. Project tasks tagged `agent` are available to agents, subject to all other project instructions and task-specific restrictions.
+
+You MUST ask the developer for permission before running any other mise task or directly invoking any project script.
+Approved tasks and authorized workflows may run their configured scripts and child tasks; this does not authorize invoking those internals directly or bypassing this rule through a generic runner.
+Adding the `agent` tag to any other task requires developer approval.
+
+Run `mise tasks ls --no-global --hidden --tag agent` to inspect tagged task metadata.
+Pass task arguments after `--`, for example `mise run <task> -- <arguments>`.
+
+The following tasks are available to agents. This list includes task definitions within this repository and its vendored files:
+
+- `mise run harness:agents.md:generate` — Regenerate AGENTS.md
+- `mise run harness:generate` — Regenerate harness
+- `mise run harness:load` — Update shared harness
+- `mise run harness:skills:install` — Install shared harness skills
+- `mise run harness:specs:install` — Install selected shared harness specifications
+
 ### `donna`
 
 Use Donna to run project-local deterministic workflows.

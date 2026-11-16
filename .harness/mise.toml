@@ -10,6 +10,7 @@ variants = [
 ]
 
 [tasks."harness:load"]
+tags = ["agent"]
 description = "Update shared harness"
 dir = "{{ vars.harness_project_root }}"
 run = '''
@@ -23,6 +24,7 @@ mise bootstrap repos update --yes {{ vars.harness_repo_root | quote }}
 '''
 
 [tasks."harness:agents.md:generate"]
+tags = ["agent"]
 description = "Regenerate AGENTS.md"
 dir = "{{ vars.harness_project_root }}"
 depends = ["harness:specs:install"]
@@ -36,6 +38,7 @@ printf '%s\n' "$generated_agents" > {{ vars.harness_project_root | quote }}/AGEN
 ]
 
 [tasks."harness:skills:install"]
+tags = ["agent"]
 description = "Install shared harness skills"
 dir = "{{ vars.harness_project_root }}"
 env = { HARNESS_SKILLS = '{{ read_toml(path=vars.harness_project_root ~ "/.harness/config.toml")["skills"] | default(value=[]) | join(sep="\n") }}' }
@@ -57,6 +60,7 @@ printf '%s\n' "$HARNESS_SKILLS" |
 '''
 
 [tasks."harness:specs:install"]
+tags = ["agent"]
 description = "Install selected shared harness specifications"
 dir = "{{ vars.harness_project_root }}"
 env = { HARNESS_SPECS = '{{ read_toml(path=vars.harness_project_root ~ "/.harness/config.toml")["specs"] | default(value=[]) | join(sep="\n") }}' }
@@ -78,6 +82,7 @@ printf '%s\n' "$HARNESS_SPECS" |
 '''
 
 [tasks."harness:generate"]
+tags = ["agent"]
 description = "Regenerate harness"
 dir = "{{ vars.harness_project_root }}"
 depends = [

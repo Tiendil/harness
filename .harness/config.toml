@@ -22,6 +22,7 @@ fragments = [
   "agents.md.d/behavior/restrictions/git.md",
   "agents.md.d/specifications.md",
   "agents.md.d/cli_tools/intro.md",
+  "agents.md.d/cli_tools/mise.md",
   "agents.md.d/cli_tools/donna.md",
   "agents.md.d/cli_tools/depmesh.md",
   "agents.md.d/cli_tools/ast-grep.md",
