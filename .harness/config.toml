@@ -15,6 +15,7 @@ fragments = [
   "agents.md.d/behavior/reaction_on_developer_commands.md",
   "agents.md.d/behavior/ask_developer_when.md",
   "agents.md.d/behavior/working_with_text_artifacts.md",
+  "agents.md.d/behavior/introducing_changes.md",
   "agents.md.d/behavior/restrictions/intro.md",
   "agents.md.d/behavior/restrictions/project.md",
   "agents.md.d/behavior/restrictions/dependencies.md",

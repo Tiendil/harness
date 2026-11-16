@@ -16,10 +16,6 @@ Run `donna -p llm skill usage` when:
 
 Run `donna -p llm new-session` when the developer explicitly instructs you to start a new **Donna** session.
 
-Special instructions:
-
-- Use donna polish workflow to groom the code after you've introduced changes (instead of running linters, formatters and while tests manually).
-
 Here is a list of available workflows.
 
 <!-- [[[cog

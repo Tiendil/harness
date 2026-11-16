@@ -79,6 +79,19 @@ Special exceptions to the above rules are:
 
 - You may skip reading each file when bulk editing of particular parts of text artifacts (replacing a particular string in all source files, renaming a particular function, etc.).
 
+### Introducing changes
+
+You MUST distinguish implementation from final validation.
+
+- **Implementation:** the planned changes are still in progress. Use focused checks permitted by the project to guide the work.
+- **Final validation:** the planned changes are complete and ready for review. Perform the final validation required by the project before reporting completion.
+
+Final validation may require corrections. Make those corrections and repeat the validation required by the project or active workflow for the resulting state.
+
+Task permissions do not override the project's rules about when to run a task.
+
+You MUST NOT report work as complete while required validation has failed or remains incomplete. Report any validation that could not be completed.
+
 ### Resticted operations
 
 You ABSOLUTELY MUST NOT perform the following operations without explicit instructions to do so.
@@ -165,10 +178,6 @@ Run `donna -p llm skill usage` when:
 - You need to perform an operation that is not covered by instructions.
 
 Run `donna -p llm new-session` when the developer explicitly instructs you to start a new **Donna** session.
-
-Special instructions:
-
-- Use donna polish workflow to groom the code after you've introduced changes (instead of running linters, formatters and while tests manually).
 
 Here is a list of available workflows.
 
