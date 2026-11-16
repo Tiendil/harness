@@ -1,0 +1,4 @@
+# Shared Codex settings for the harness and target repositories.
+# Run mise run harness:codex:generate to regenerate .codex/config.toml.
+# Target repositories replace matching top-level values, including entire tables and arrays.
+# Write relative paths for the generated configuration's .codex/ directory.
