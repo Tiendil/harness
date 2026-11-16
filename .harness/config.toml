@@ -1,3 +1,8 @@
+[codex]
+# Enable selected shared MCP servers when generating .codex/config.toml.
+# For Playwright, use ["playwright"]. An empty list keeps shared defaults disabled.
+enabled_mcp_servers = []
+
 [agents_md]
 embedded_specs = []
 

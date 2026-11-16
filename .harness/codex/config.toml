@@ -85,3 +85,16 @@ project_doc_max_bytes = 1_048_576
 # Use those observations to decide whether to keep 32,000 tokens or adjust the
 # budget. The expected benefit has not yet been verified against new sessions.
 tool_output_token_limit = 32_000
+
+# Shared Playwright MCP server
+# ===========================
+# Enable this server through codex.enabled_mcp_servers in .harness/config.toml.
+# The shared mise task starts a temporary Docker container and stores browser
+# artifacts in the target repository's .session/playwright/ directory.
+[mcp_servers.playwright]
+command = "mise"
+args = ["run", "--quiet", "harness:mcp:playwright"]
+enabled = false
+startup_timeout_sec = 90
+tool_timeout_sec = 120
+default_tools_approval_mode = "approve"
