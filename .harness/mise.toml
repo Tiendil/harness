@@ -81,6 +81,25 @@ printf '%s\n' "$HARNESS_SPECS" |
     specs/
 '''
 
+[tasks."harness:specs:return"]
+description = "Copy imported specifications back to the shared harness repository"
+dir = "{{ vars.harness_project_root }}"
+env = { HARNESS_SPECS = '{{ read_toml(path=vars.harness_project_root ~ "/.harness/config.toml")["specs"] | default(value=[]) | join(sep="\n") }}' }
+run = '''
+set -eu
+
+if [ {{ vars.harness_repo_root | quote }} = {{ vars.harness_project_root | quote }} ]; then
+  exit 0
+fi
+
+printf '%s\n' "$HARNESS_SPECS" |
+  rsync --archive --relative --itemize-changes \
+    --files-from=- \
+    -- \
+    specs/ \
+    {{ vars.harness_repo_root | quote }}/specs/
+'''
+
 [tasks."harness:mcp:playwright"]
 description = "Run Playwright MCP in a temporary Docker container"
 dir = "{{ vars.harness_project_root }}"
