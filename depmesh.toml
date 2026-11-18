@@ -6,7 +6,7 @@ description = "Specifications that apply to the artifact."
 
 [[relations]]
 id = "governs"
-description = "Specifications governed by the meta specification."
+description = "Specifications governed by the artifact."
 
 [[rules]]
 relation = "governed_by"
@@ -17,3 +17,43 @@ output = { type = "list", artifacts = ["@/specs/meta/content.md", "@/specs/meta/
 relation = "governs"
 input = { type = "one_of", artifacts = ["@/specs/meta/content.md", "@/specs/meta/format.md", "@/specs/meta/directories.md"] }
 output = { type = "files", pattern = "@/specs/**/*.md" }
+
+# Programming content requirements apply to programming and language specifications.
+[[rules]]
+relation = "governed_by"
+input = { type = "any", items = [
+  { type = "glob", pattern = "@/specs/programming/**/*.md" },
+  { type = "glob", pattern = "@/specs/python/**/*.md" },
+  { type = "glob", pattern = "@/specs/typescript/**/*.md" },
+] }
+output = { type = "list", artifacts = ["@/specs/programming/content.md"] }
+
+[[rules]]
+relation = "governs"
+input = { type = "one_of", artifacts = ["@/specs/programming/content.md"] }
+output = { type = "union", items = [
+  { type = "files", pattern = "@/specs/programming/**/*.md" },
+  { type = "files", pattern = "@/specs/python/**/*.md" },
+  { type = "files", pattern = "@/specs/typescript/**/*.md" },
+] }
+
+# Shared test conventions govern the language and framework test specifications.
+[[rules]]
+relation = "governed_by"
+input = { type = "one_of", artifacts = [
+  "@/specs/python/tests.md",
+  "@/specs/python/libs/pytest.md",
+  "@/specs/typescript/tests.md",
+  "@/specs/typescript/libs/vitest.md",
+] }
+output = { type = "list", artifacts = ["@/specs/programming/tests.md"] }
+
+[[rules]]
+relation = "governs"
+input = { type = "one_of", artifacts = ["@/specs/programming/tests.md"] }
+output = { type = "list", artifacts = [
+  "@/specs/python/tests.md",
+  "@/specs/python/libs/pytest.md",
+  "@/specs/typescript/tests.md",
+  "@/specs/typescript/libs/vitest.md",
+] }

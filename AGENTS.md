@@ -148,7 +148,12 @@ This index lists the available specifications and their goals.
 - `specs/programming/code.md` — conventions for program implementations.
 - `specs/programming/content.md` — content requirements for programming specifications.
 - `specs/programming/postgresql.md` — conventions for relational schema design and SQL in PostgreSQL.
-- `specs/programming/python.md` — language-level implementation conventions for Python source code.
+- `specs/programming/tests.md` — conventions for organizing automated software tests and verifying program behavior.
+- `specs/python/language.md` — language-level implementation conventions for Python source code.
+- `specs/python/libs/pytest.md` — conventions for writing Python tests with pytest.
+- `specs/python/tests.md` — conventions for writing and organizing Python tests.
+- `specs/typescript/libs/vitest.md` — conventions for writing tests with Vitest.
+- `specs/typescript/tests.md` — naming conventions for TypeScript tests.
 
 ## CLI Tools
 
