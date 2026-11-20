@@ -27,7 +27,6 @@ mise bootstrap repos update --yes {{ vars.harness_repo_root | quote }}
 tags = ["agent"]
 description = "Regenerate AGENTS.md"
 dir = "{{ vars.harness_project_root }}"
-depends = ["harness:specs:install"]
 run = [
   'python3 {{ vars.harness_repo_root | quote }}/bin/validate-agents-md-fragments.py',
   'mise dot apply --yes {{ vars.harness_project_root | quote }}/AGENTS.md',
@@ -198,5 +197,6 @@ description = "Initialize harness"
 dir = "{{ vars.harness_project_root }}"
 run = [
   "mise run harness:load",
+  "mise run harness:specs:install",
   "mise run harness:generate"
 ]
