@@ -16,12 +16,18 @@ This specification applies to automated software tests across programming langua
 
 Tests SHOULD be deterministic for the same repository state and filesystem state.
 
-Deterministic tests let developers reproduce failures.
+**Rationale:** Deterministic tests let developers reproduce failures.
 
 Tests SHOULD prefer a real current-time value as the baseline for time-related cases when the exact calendar date is not part of the behavior under test.
-Hard-coded calendar datetimes SHOULD be used only when the specific date, month, year, weekday, or timezone boundary is itself relevant to the tested behavior.
+Tests SHOULD use hard-coded calendar datetimes only when at least one of the following is relevant to the behavior under test.
 
-A shared baseline lets relative-time assertions use the same reference as their inputs.
+- a specific date.
+- a specific month.
+- a specific year.
+- a specific weekday.
+- a timezone boundary.
+
+**Rationale:** A shared baseline lets relative-time assertions use the same reference as their inputs.
 Specific calendar dates let tests exercise the boundaries that matter to the behavior.
 
 Tests MUST NOT depend on external network access.
@@ -47,7 +53,7 @@ Tests SHOULD verify observable behavior and locally owned validation instead of 
 
 **Counterexample:** Checking which private helper was called, which module was imported, or what type annotation was written would test implementation details.
 
-Public boundaries and behavioral assertions keep tests useful when implementation details change.
+**Rationale:** Public boundaries and behavioral assertions keep tests useful when implementation details change.
 
 Tests that inspect program structure to enforce a project-wide convention MUST be dedicated architecture tests.
 Examples of program structure include imports, field declarations, and type annotations where the language supports them.
@@ -61,9 +67,16 @@ Ordinary unit tests SHOULD NOT inspect runtime representations solely to restate
 
 Tests SHOULD use mocks, stubs, and spies as little as possible.
 
-Tests SHOULD prefer real project code, temporary files, local test services, explicit fixtures, test constructors, and small fakes over mocked collaborators.
+Tests SHOULD prefer the following over mocked collaborators.
 
-Real collaborators reduce the risk that a test passes against behavior that differs from production.
+- real project code.
+- temporary files.
+- local test services.
+- explicit fixtures.
+- test constructors.
+- small fakes.
+
+**Rationale:** Real collaborators reduce the risk that a test passes against behavior that differs from production.
 
 Patches SHOULD be scoped to the test that needs them and SHOULD patch the name as it is looked up by the code under test.
 
@@ -79,7 +92,7 @@ The structure of tests SHOULD mirror the implementation structure when that make
 
 Cross-module integration tests MAY live under the module that owns the public boundary being exercised.
 
-Mirroring the implementation helps developers find the tests for a module.
+**Rationale:** Mirroring the implementation helps developers find the tests for a module.
 
 A test file for a single implementation module MUST derive its name from that module's name using the project's test file naming convention.
 
@@ -94,7 +107,7 @@ Tests SHOULD prefer separate tests for orthogonal execution paths or validation 
 
 **Example:** `test_a` and `test_b` are better than `test_a_or_b` when `a` and `b` describe independent behavior.
 
-Focused tests help readers identify which behavior failed.
+**Rationale:** Focused tests help readers identify which behavior failed.
 
 ## Test coverage
 
@@ -231,7 +244,13 @@ Command helper tests SHOULD cover:
 - command-adjacent workflows that are callable without invoking the CLI runner.
 - warnings or errors produced by those narrow helpers.
 
-Full CLI execution is assumed to be covered by manual testing, including argument parsing, option validation, command wiring, exit behavior, and error output.
+Full CLI execution is assumed to be covered by manual testing, including the following.
+
+- argument parsing.
+- option validation.
+- command wiring.
+- exit behavior.
+- error output.
 
 ### Background processing
 
@@ -246,7 +265,9 @@ Tests MUST NOT reset a shared resource unless the reset is required to verify th
 
 Tests MUST NOT clean up shared state after themselves unless the developer explicitly requests cleanup behavior.
 
-A test for reading one record can create that record through the application and leave the other records in the shared database in place.
+**Rationale:** Cleanup in a shared resource can affect unrelated state, even when it targets only records created by the test.
+
+**Example:** A test for reading one record can create that record through the application and leave the other records in the shared database in place.
 
 ## Fixtures and temporary data
 
@@ -262,12 +283,12 @@ Expected normalized identifiers in test fixtures SHOULD use the separators speci
 
 When the normalization contract does not specify a separator, expected path identifiers in test fixtures SHOULD use forward slashes.
 
-A fixture for a format that specifies forward slashes can use `folder/file` as the expected identifier.
+**Example:** A fixture for a format that specifies forward slashes can use `folder/file` as the expected identifier.
 
 Tests MUST undo temporary runtime overrides that can affect other tests before the test ends.
 Examples include changing the working directory, patching a function such as `window.fetch`, and installing fake timers.
 
-Temporary files keep file-based setup isolated.
+**Rationale:** Temporary files keep file-based setup isolated.
 Small fixtures make the relevant data easy to see.
 
 Tests MUST prepare any additional data they need at the start of the relevant test or through automatic setup that applies to that test.
@@ -278,7 +299,13 @@ Tests that can exercise a mutable in-memory component in isolation SHOULD use a 
 
 Tests MUST prepare and mutate application-owned state through the production code that owns the corresponding state transition and invariants.
 
-Tests MUST NOT bypass production logic by writing directly to databases, files, queues, caches, or other application-owned state unless the developer explicitly approves the exception.
+Tests MUST NOT bypass production logic by writing directly to application-owned state unless the developer explicitly approves the exception.
+Examples include state stored in the following.
+
+- databases.
+- files.
+- queues.
+- caches.
 
 An approved exception MUST be documented next to the bypass and MUST explain why the required state cannot be produced through production code.
 
@@ -296,7 +323,7 @@ Rendered output tests SHOULD assert exact output only when the exact output is p
 
 Rendered output tests MAY assert selected lines, fields, or records when exact text is intentionally outside the relevant specification.
 
-Structured assertions focus on the values the contract guarantees.
+**Rationale:** Structured assertions focus on the values the contract guarantees.
 Exact comparisons are useful when callers depend on the rendering itself.
 
 Security-sensitive sanitization tests SHOULD assert both allowed output and removed unsafe input.

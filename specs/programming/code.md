@@ -16,9 +16,9 @@ Programming specifications MUST be applied to newly written code.
 Existing implementations and artifacts MUST NOT be changed retroactively to conform to a programming specification unless the developer explicitly requests the change.
 This restriction applies regardless of how the change is made, including when it is carried out by newly written code.
 
-## Prefer enums over primitive values
+## Enums for closed sets
 
-Project-owned closed sets of named values SHOULD use enums instead of primitive values or constants.
+Project-owned closed sets of named values MUST use enums instead of primitive values or constants.
 Primitive values or constants MAY be used when exact literal values are required by a third-party interface or when the values do not represent independently named project concepts.
 
 **Rationale:** Enums make allowed values discoverable and help tools detect invalid member references.
@@ -39,7 +39,7 @@ Enum values used in external compatibility contracts MUST NOT be changed or reus
 
 Deprecated enum members SHOULD be marked using the language's native deprecation mechanism or a `DEPRECATED` comment in the language's comment syntax, including the reason for deprecation.
 
-When choosing types for enum values, consider the layer that owns the enum:
+When choosing types for enum values, consider the enum’s architectural role.
 
 - API-boundary enums SHOULD use values required by the API contract.
 - Storage-bound enums SHOULD use values that provide performance and storage efficiency.
@@ -59,14 +59,55 @@ Code that branches over an enum SHOULD prefer `match` or `switch` statements ove
 Code that dispatches on an enum MUST handle every member permitted at that point by the operation's contract.
 Code SHOULD use static exhaustiveness checking to verify that coverage when supported by the language or type checker.
 
+## Interface contracts
+
+Callers MUST NOT rely on behavior outside the interface’s contract, including implementation details they can see in the source code or observe at runtime.
+
+A module MAY expose a public interface before it has production callers if a current requirement calls for the capability and direct tests verify the interface’s documented contract.
+
+## Types at module boundaries
+
+Where the language supports distinct types, structured application values MUST have explicit types before crossing a module boundary.
+Untyped mappings MUST NOT be used for those values unless the data is already being prepared as a serialized representation.
+
+### Semantic primitive types
+
+Where the language supports distinct types, primitive values with a distinct domain meaning MUST use a type specific to that meaning before crossing a module boundary.
+Data model fields and public function signatures MUST use the corresponding semantic types for these values.
+
+Raw primitive types MAY be used at the following boundaries where external data is converted into or out of project types.
+
+- parsing.
+- rendering.
+- storage.
+- serialization.
+
+Raw primitive types MAY be used inside local helper code when the value has already been validated or when adding a semantic type would not improve module-boundary clarity.
+
 ## Runtime type validation
 
 Functions called through project-controlled typed interfaces SHOULD treat declared parameter types as caller contracts.
 They SHOULD NOT perform runtime checks solely to verify that arguments match their declared types.
 
-Runtime validation remains appropriate at untyped or external boundaries, including HTTP input, CLI input, configuration, deserialized database rows, third-party responses, and plugin data.
+Runtime validation remains appropriate at untyped or external boundaries, including the following examples.
 
-Code MUST still validate semantic constraints that are not guaranteed by the contracts of the declared types, such as non-empty identifiers, timezone awareness, numeric ranges, configured values, and valid cross-field combinations.
+- HTTP input.
+- CLI input.
+- configuration.
+- deserialized database rows.
+- third-party responses.
+- plugin data.
+
+Code that parses external input SHOULD validate it during parsing, before constructing typed application values.
+
+Code MUST still validate semantic constraints that are not guaranteed by the contracts of the declared types.
+Such constraints include the following.
+
+- non-empty identifiers.
+- timezone awareness.
+- numeric ranges.
+- configured values.
+- valid cross-field combinations.
 
 Code that constructs a semantically specific typed value from raw or untyped data MUST validate the semantic invariants of that type at the construction boundary.
 Functions and methods that receive the constructed typed value MUST assume those invariants hold and MUST NOT repeat their validation.
@@ -76,7 +117,18 @@ Functions and methods that receive the constructed typed value MUST assume those
 Validation functions and methods MUST only verify invariants.
 They MUST return no data on success, apart from any validation status required by their contract, and MUST signal failure through the error mechanism defined by their contract.
 
-Validation functions and methods MUST NOT return information merely retrieved, resolved, transformed, or extracted as a by-product of validation.
+Each validation function, method, or hook SHOULD enforce one cohesive invariant or one closely related family of constraints.
+Independent concerns SHOULD use separate validators.
+A single validator MAY examine multiple values when they jointly define one invariant.
+Separating independent validation concerns keeps invariants locally understandable, independently testable, and easier to diagnose.
+
+Validation functions and methods MUST NOT return information obtained merely as a by-product of validation through any of the following operations.
+
+- retrieval.
+- resolution.
+- transformation.
+- extraction.
+
 They MAY perform such operations internally when required to verify invariants.
 Callers that need the resulting information MUST obtain it separately, unless the operation explicitly acts as a validating constructor.
 
@@ -87,6 +139,21 @@ A validation function or method MAY return a constructed value when it intention
 Constructing and returning that value MUST be part of the operation's explicit contract; this exception does not permit returning dependencies resolved or information incidentally extracted during validation.
 
 Framework validation hooks whose protocols require returning the validated value or instance are exempt from the success-result restriction.
+
+## Data structure conventions
+
+Input whose order is significant SHOULD be represented with ordered collections.
+
+Sets MAY be used internally for de-duplication.
+Externally visible output order MUST be produced explicitly according to the relevant behavior or API specification.
+
+Value objects whose equality is based on their data SHOULD be immutable after construction when practical.
+Objects used for de-duplication SHOULD be hashable when practical.
+
+Outgoing serialized representations MUST be created at protocol boundaries.
+Domain logic SHOULD operate on the corresponding typed application values.
+
+Structured log data MUST use stable keys and MUST NOT contain presentation formatting.
 
 ## Function boundaries
 
@@ -99,6 +166,11 @@ A separate function or method MAY be introduced, including at a single call site
 
 Trivial code used at only one call site MUST remain inline when extraction would merely isolate an implementation step without providing a meaningful boundary.
 Code is trivial when its intent is clear from its operations and it neither enforces a separate invariant nor contains non-obvious control flow.
+
+## Interchangeable components
+
+When each member of a small, closed family of interchangeable components has meaningful behavior of its own, each implementation SHOULD live in a separate file, module, or package.
+Code that groups the implementations SHOULD be limited to definitions and behavior common to the family, plus code that selects or iterates over its members.
 
 ## Temporary implementation code
 

@@ -8,14 +8,27 @@ description = "Specifications that apply to the artifact."
 id = "governs"
 description = "Specifications governed by the artifact."
 
+# General meta specifications govern every specification document.
 [[rules]]
 relation = "governed_by"
 input = { type = "glob", pattern = "@/specs/**/*.md" }
-output = { type = "list", artifacts = ["@/specs/meta/content.md", "@/specs/meta/format.md", "@/specs/meta/directories.md"] }
+output = { type = "list", artifacts = [
+  "@/specs/meta/content.md",
+  "@/specs/meta/dictionary.md",
+  "@/specs/meta/directories.md",
+  "@/specs/meta/format.md",
+  "@/specs/meta/language.md",
+] }
 
 [[rules]]
 relation = "governs"
-input = { type = "one_of", artifacts = ["@/specs/meta/content.md", "@/specs/meta/format.md", "@/specs/meta/directories.md"] }
+input = { type = "one_of", artifacts = [
+  "@/specs/meta/content.md",
+  "@/specs/meta/dictionary.md",
+  "@/specs/meta/directories.md",
+  "@/specs/meta/format.md",
+  "@/specs/meta/language.md",
+] }
 output = { type = "files", pattern = "@/specs/**/*.md" }
 
 # Programming content requirements apply to programming and language specifications.
@@ -37,6 +50,28 @@ output = { type = "union", items = [
   { type = "files", pattern = "@/specs/typescript/**/*.md" },
 ] }
 
+# DTO architecture follows the programming code conventions for typed boundaries.
+[[rules]]
+relation = "governed_by"
+input = { type = "one_of", artifacts = ["@/specs/programming/dto.md"] }
+output = { type = "list", artifacts = ["@/specs/programming/code.md"] }
+
+[[rules]]
+relation = "governs"
+input = { type = "one_of", artifacts = ["@/specs/programming/code.md"] }
+output = { type = "list", artifacts = ["@/specs/programming/dto.md"] }
+
+# The Pydantic DTO foundation follows the shared DTO architecture.
+[[rules]]
+relation = "governed_by"
+input = { type = "one_of", artifacts = ["@/specs/python/libs/pydantic.dto_foundation.md"] }
+output = { type = "list", artifacts = ["@/specs/programming/dto.md"] }
+
+[[rules]]
+relation = "governs"
+input = { type = "one_of", artifacts = ["@/specs/programming/dto.md"] }
+output = { type = "list", artifacts = ["@/specs/python/libs/pydantic.dto_foundation.md"] }
+
 # Shared test conventions govern the language and framework test specifications.
 [[rules]]
 relation = "governed_by"
@@ -57,3 +92,25 @@ output = { type = "list", artifacts = [
   "@/specs/typescript/tests.md",
   "@/specs/typescript/libs/vitest.md",
 ] }
+
+# The pytest specification follows the Python test conventions.
+[[rules]]
+relation = "governed_by"
+input = { type = "one_of", artifacts = ["@/specs/python/libs/pytest.md"] }
+output = { type = "list", artifacts = ["@/specs/python/tests.md"] }
+
+[[rules]]
+relation = "governs"
+input = { type = "one_of", artifacts = ["@/specs/python/tests.md"] }
+output = { type = "list", artifacts = ["@/specs/python/libs/pytest.md"] }
+
+# The Vitest specification follows the TypeScript test conventions.
+[[rules]]
+relation = "governed_by"
+input = { type = "one_of", artifacts = ["@/specs/typescript/libs/vitest.md"] }
+output = { type = "list", artifacts = ["@/specs/typescript/tests.md"] }
+
+[[rules]]
+relation = "governs"
+input = { type = "one_of", artifacts = ["@/specs/typescript/tests.md"] }
+output = { type = "list", artifacts = ["@/specs/typescript/libs/vitest.md"] }

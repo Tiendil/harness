@@ -71,8 +71,9 @@ The `Goal of the document` section MUST NOT define requirements for the document
 - MUST list something.
 - MUST describe something.
 
-`This document describes the abstraction level and content conventions for backend module specifications` is an appropriate goal because it identifies the document's content.
-`This document describes conventions that keep backend module specifications focused` is inappropriate because it claims an intended effect on governed specifications.
+**Example:** `This document describes the abstraction level and content conventions for backend module specifications` is an appropriate goal because it identifies the document's content.
+
+**Counterexample:** `This document describes conventions that keep backend module specifications focused` is inappropriate because it claims an intended effect on governed specifications.
 
 The `Scope` section MUST identify the class of artifacts, behavior, or concerns to which the specification applies.
 It MUST describe that boundary at a stable conceptual level.
@@ -89,8 +90,9 @@ Independently reusable specifications SHOULD include those definitions locally, 
 
 ## Style
 
+The [language conventions](language.md) apply to specification prose and normative requirements.
+
 - Specifications MUST use Markdown syntax for formatting the document.
-- Specifications MUST follow [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
 - Specifications MUST NOT break long lines to fit within 80 characters or any other number; they MUST use as many characters as needed to express the idea clearly.
 - When a prose statement names four or more distinct items, those items SHOULD be formatted as a Markdown list rather than inline prose.
 - Specifications SHOULD use Markdown lists for simple enumerations, including terms with definitions and named items with descriptions or a few associated properties.
@@ -143,8 +145,7 @@ A callout SHOULD be omitted when it merely restates already clear content.
 
 ### Bold inline labels
 
-A non-normative callout SHOULD use the narrowest applicable bold inline label so readers can distinguish the callout's role from normative requirements.
-A callout MAY remain unlabeled when its non-normative role is already unambiguous from the surrounding structure.
+A non-normative callout MUST use the narrowest applicable bold inline label.
 A bold inline label MUST use exactly one of these forms:
 
 - `**Example:**` — a conforming concrete illustration.

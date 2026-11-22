@@ -7,7 +7,7 @@ This document describes conventions for project-level dictionaries and shared pr
 ## Scope
 
 This specification applies to project-level dictionaries and the placement and use of shared project terminology in repositories that maintain them.
-Local dictionaries in independently reusable specifications are out of scope.
+The abbreviation entry format also applies to local dictionaries in specifications.
 
 ## Dictionary
 
@@ -20,10 +20,16 @@ When present, the project-level dictionary MUST be located at `./specs/dictionar
 
 ## Definition placement
 
-When a repository maintains a project-level dictionary, project-specific terms used by multiple project-maintained specifications SHOULD be defined there.
+When a repository maintains a project-level dictionary, it SHOULD define a project-specific term used by multiple project-maintained specifications if readers cannot reliably infer its meaning from context and need that meaning to interpret or apply a requirement.
 A project-maintained specification's local `Dictionary` section SHOULD contain only terms specific to that specification.
 
-The project-level dictionary SHOULD contain project-specific terms whose definitions clarify the project's requirements or shared vocabulary.
+## Abbreviation entries
+
+An abbreviation entry MUST put the abbreviation in inline code and use spaced em dashes to separate the abbreviation, its expansion, and its definition.
+
+```markdown
+- `DTO` — Data Transfer Object — a typed object that carries structured application data or parsed intent.
+```
 
 ## Terminology use
 
