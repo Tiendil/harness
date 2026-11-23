@@ -12,8 +12,9 @@ import cog
 with Path(".harness/config.toml").open("rb") as config_file:
     harness_config = tomllib.load(config_file)
 goal_prefixes_to_remove = harness_config["agents_md"]["index_goal_prefixes_to_remove"]
+specifications_root = Path(harness_config.get("specifications", {}).get("root", "specs"))
 
-for spec_path in sorted(Path("specs").rglob("*.md"), key=Path.as_posix):
+for spec_path in sorted(specifications_root.rglob("*.md"), key=Path.as_posix):
     if not spec_path.is_file():
         continue
 

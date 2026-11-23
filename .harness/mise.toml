@@ -58,45 +58,134 @@ printf '%s\n' "$HARNESS_SKILLS" |
     .agents/skills/
 '''
 
+[task_templates."harness:copy-files"]
+dir = "{{ vars.harness_project_root }}"
+run = '''
+python3 - {{ vars.harness_repo_root | quote }} {{ vars.harness_project_root | quote }} \
+  {{ vars.harness_copy_direction | quote }} {{ vars.harness_copy_inputs | quote }} <<'PY'
+import json
+import subprocess
+import sys
+import tomllib
+from enum import StrEnum
+from pathlib import Path
+
+
+class CopyDirection(StrEnum):
+    INSTALL = "install"
+    RETURN = "return"
+
+
+harness_root = Path(sys.argv[1])
+project_root = Path(sys.argv[2])
+if harness_root == project_root:
+    raise SystemExit(0)
+
+direction = CopyDirection(sys.argv[3])
+copy_inputs = json.loads(sys.argv[4])
+with (project_root / ".harness/config.toml").open("rb") as config_file:
+    config = tomllib.load(config_file)
+
+for copy_input in copy_inputs:
+    section_name = copy_input["section"]
+    section = config.get(section_name, {})
+    legacy_files_key = copy_input.get("legacy_files_key")
+    if legacy_files_key is not None and section_name not in config:
+        files = config.get(legacy_files_key, [])
+    else:
+        files = section.get(copy_input["files_key"], [])
+    if not files:
+        continue
+
+    configured_root = section.get("root", copy_input["default_root"])
+    project_directory = project_root / f"./{configured_root}"
+    harness_directory = harness_root / copy_input["harness_directory"]
+    match direction:
+        case CopyDirection.INSTALL:
+            source_directory, destination_directory = harness_directory, project_directory
+        case CopyDirection.RETURN:
+            source_directory, destination_directory = project_directory, harness_directory
+
+    destination_directory.mkdir(parents=True, exist_ok=True)
+    result = subprocess.run(
+        [
+            "rsync",
+            "--archive",
+            "--relative",
+            "--checksum",
+            "--itemize-changes",
+            "--files-from=-",
+            "--",
+            f"{source_directory}/",
+            f"{destination_directory}/",
+        ],
+        input="\n".join(files) + "\n",
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise SystemExit(result.returncode)
+PY
+'''
+
 [tasks."harness:specs:install"]
 tags = ["agent"]
 description = "Install selected shared harness specifications"
-dir = "{{ vars.harness_project_root }}"
-env = { HARNESS_SPECS = '{{ read_toml(path=vars.harness_project_root ~ "/.harness/config.toml")["specs"] | default(value=[]) | join(sep="\n") }}' }
-run = '''
-set -eu
+extends = "harness:copy-files"
 
-if [ {{ vars.harness_repo_root | quote }} = {{ vars.harness_project_root | quote }} ]; then
-  exit 0
-fi
+[tasks."harness:specs:install".vars]
+harness_copy_direction = "install"
+harness_copy_inputs = '''
+[
+  {
+    "section": "specifications",
+    "files_key": "specs",
+    "default_root": "specs",
+    "harness_directory": "specs",
+    "legacy_files_key": "specs"
+  }
+]
+'''
 
-mkdir -p specs
+[tasks."harness:workflows:install"]
+description = "Install selected shared harness workflow fragments"
+extends = "harness:copy-files"
 
-printf '%s\n' "$HARNESS_SPECS" |
-  rsync --archive --relative --itemize-changes \
-    --files-from=- \
-    -- \
-    {{ vars.harness_repo_root | quote }}/specs/ \
-    specs/
+[tasks."harness:workflows:install".vars]
+harness_copy_direction = "install"
+harness_copy_inputs = '''
+[
+  {
+    "section": "workflows",
+    "files_key": "fragments",
+    "default_root": ".harness/workflows",
+    "harness_directory": "workflows"
+  }
+]
 '''
 
 [tasks."harness:specs:return"]
-description = "Copy imported specifications back to the shared harness repository"
-dir = "{{ vars.harness_project_root }}"
-env = { HARNESS_SPECS = '{{ read_toml(path=vars.harness_project_root ~ "/.harness/config.toml")["specs"] | default(value=[]) | join(sep="\n") }}' }
-run = '''
-set -eu
+description = "Copy imported specifications and workflow fragments back to the shared harness repository"
+extends = "harness:copy-files"
 
-if [ {{ vars.harness_repo_root | quote }} = {{ vars.harness_project_root | quote }} ]; then
-  exit 0
-fi
-
-printf '%s\n' "$HARNESS_SPECS" |
-  rsync --archive --relative --itemize-changes \
-    --files-from=- \
-    -- \
-    specs/ \
-    {{ vars.harness_repo_root | quote }}/specs/
+[tasks."harness:specs:return".vars]
+harness_copy_direction = "return"
+harness_copy_inputs = '''
+[
+  {
+    "section": "specifications",
+    "files_key": "specs",
+    "default_root": "specs",
+    "harness_directory": "specs",
+    "legacy_files_key": "specs"
+  },
+  {
+    "section": "workflows",
+    "files_key": "fragments",
+    "default_root": ".harness/workflows",
+    "harness_directory": "workflows"
+  }
+]
 '''
 
 [tasks."harness:mcp:playwright"]
@@ -198,5 +287,6 @@ dir = "{{ vars.harness_project_root }}"
 run = [
   "mise run harness:load",
   "mise run harness:specs:install",
+  "mise run harness:workflows:install",
   "mise run harness:generate"
 ]
