@@ -214,6 +214,11 @@ exec docker run --rm -i --init \
   --output-dir /workspace/.playwright-mcp
 '''
 
+[tasks."harness:codex:roles:generate"]
+description = "Generate Codex roles from harness instruction fragments"
+dir = "{{ vars.harness_project_root }}"
+run = "python3 {{ vars.harness_repo_root | quote }}/bin/generate-codex-roles.py"
+
 [tasks."harness:codex:generate"]
 description = "Generate Codex configuration"
 dir = "{{ vars.harness_project_root }}"
@@ -278,6 +283,7 @@ dir = "{{ vars.harness_project_root }}"
 depends = [
   "harness:agents.md:generate",
   "harness:codex:generate",
+  "harness:codex:roles:generate",
   "harness:skills:install"
 ]
 
