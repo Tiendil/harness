@@ -287,6 +287,17 @@ depends = [
   "harness:skills:install"
 ]
 
+[tasks."harness:lock:check"]
+tags = ["agent"]
+description = "Check for unapplied harness source changes"
+dir = "{{ vars.harness_project_root }}"
+run = 'python3 {{ vars.harness_repo_root | quote }}/bin/harness-version.py check'
+
+[tasks."harness:lock:record"]
+description = "Record applied harness source hashes"
+dir = "{{ vars.harness_project_root }}"
+run = 'python3 {{ vars.harness_repo_root | quote }}/bin/harness-version.py record'
+
 [tasks."harness:initialize"]
 description = "Initialize harness"
 dir = "{{ vars.harness_project_root }}"
@@ -294,5 +305,6 @@ run = [
   "mise run harness:load",
   "mise run harness:specs:install",
   "mise run harness:workflows:install",
-  "mise run harness:generate"
+  "mise run harness:generate",
+  "mise run harness:lock:record"
 ]
