@@ -42,7 +42,103 @@ skipped_fragments = []
 
 # Codex roles. Description file and fragment paths are relative to the repository root.
 # Generate .codex/agents/ with mise run harness:codex:roles:generate.
-[roles]
-# Replace the empty list with [[roles.role]] tables containing name, description, and fragments.
-# Use inline text or { file = "workers/descriptions/default.md" } for a description.
-role = []
+[[roles.role]]
+name = "default"
+description = { file = "workers/descriptions/default.md" }
+fragments = [
+  "workers/roles/default.md",
+  "workers/behaviors/communication.md",
+  "workers/behaviors/consent.md",
+  "workers/behaviors/write_ownership.md",
+  "workers/behaviors/writing_tests_prohibited.md",
+  "workers/behaviors/complex_research_prohibited.md",
+  "workers/behaviors/final_review_prohibited.md",
+]
+
+[[roles.role]]
+name = "qa_automation"
+description = { file = "workers/descriptions/qa_automation.md" }
+fragments = [
+  "workers/roles/qa_automation.md",
+  "workers/behaviors/communication.md",
+  "workers/behaviors/consent.md",
+  "workers/behaviors/write_ownership.md",
+  "workers/behaviors/writing_tests.md",
+  "workers/behaviors/complex_research_prohibited.md",
+  "workers/behaviors/final_review_prohibited.md",
+]
+
+[[roles.role]]
+name = "research_document_extractor"
+description = { file = "workers/descriptions/research_document_extractor.md" }
+fragments = [
+  "workers/roles/research_document_extractor.md",
+  "workers/behaviors/communication.md",
+  "workers/behaviors/consent.md",
+  "workers/behaviors/write_ownership.md",
+  "workers/behaviors/writing_tests_prohibited.md",
+  "workers/behaviors/complex_research.md",
+  "workers/behaviors/final_review_prohibited.md",
+]
+
+[[roles.role]]
+name = "research_analysis"
+description = { file = "workers/descriptions/research_analysis.md" }
+fragments = [
+  "workers/roles/research_analist.md",
+  "workers/behaviors/communication.md",
+  "workers/behaviors/consent.md",
+  "workers/behaviors/write_ownership.md",
+  "workers/behaviors/writing_tests_prohibited.md",
+  "workers/behaviors/complex_research.md",
+  "workers/behaviors/final_review_prohibited.md",
+]
+
+[[roles.role]]
+name = "reviewer_business"
+description = { file = "workers/descriptions/reviewer_business.md" }
+fragments = [
+  "workers/roles/reviewer_business.md",
+  "workers/behaviors/communication.md",
+  "workers/behaviors/consent.md",
+  "workers/behaviors/write_ownership.md",
+  "workers/behaviors/writing_tests_prohibited.md",
+  "workers/behaviors/complex_research_prohibited.md",
+  "workers/behaviors/final_review.md",
+]
+
+[[roles.role]]
+name = "reviewer_technical"
+description = { file = "workers/descriptions/reviewer_technical.md" }
+fragments = [
+  "workers/roles/reviewer_technical.md",
+  "workers/behaviors/communication.md",
+  "workers/behaviors/consent.md",
+  "workers/behaviors/write_ownership.md",
+  "workers/behaviors/writing_tests_prohibited.md",
+  "workers/behaviors/complex_research_prohibited.md",
+  "workers/behaviors/final_review.md",
+]
+
+[[roles.role]]
+name = "reviewer_user_experience"
+description = { file = "workers/descriptions/reviewer_user_experience.md" }
+fragments = [
+  "workers/roles/reviewer_user_experience.md",
+  "workers/behaviors/communication.md",
+  "workers/behaviors/consent.md",
+  "workers/behaviors/write_ownership.md",
+  "workers/behaviors/writing_tests_prohibited.md",
+  "workers/behaviors/complex_research_prohibited.md",
+  "workers/behaviors/final_review.md",
+]
+
+[[roles.role]]
+name = "worker"
+description = { file = "workers/descriptions/disabled.md" }
+fragments = ["workers/descriptions/disabled.md"]
+
+[[roles.role]]
+name = "explorer"
+description = { file = "workers/descriptions/disabled.md" }
+fragments = ["workers/descriptions/disabled.md"]
