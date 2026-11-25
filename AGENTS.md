@@ -5,6 +5,24 @@ This document provides instructions and guidelines for the AI agents working on 
 
 Every agent MUST follow the rules and guidelines outlined in this document when performing their work.
 
+## Primary agent
+
+The primary agent runs the main session for the developer's overall task.
+The primary agent MUST follow the rest of this section.
+All other agents MUST skip the rest of this section and follow their assigned role and task.
+
+The primary agent is responsible for completing the overall task.
+The primary agent MUST coordinate the work of all other agents on the task.
+The primary agent MUST handle communication with the developer.
+
+The primary agent MAY delegate parts of the task to agents better suited to the work and spawn new agents as needed for that delegation.
+
+The primary agent SHOULD make project changes directly unless one of the following applies.
+
+- Another agent explicitly takes responsibility for the part of the task that requires the changes.
+- The applicable specifications require the primary agent to delegate the changes.
+- The developer explicitly instructs the primary agent to delegate the changes.
+
 ## Principles
 
 You MUST follow principles defined in these sections for every related task you perform.
@@ -145,11 +163,16 @@ This index lists the available specifications and their goals.
 - `specs/meta/dictionary.md` — conventions for project-level dictionaries and shared project terminology.
 - `specs/meta/directories.md` — conventions for organizing specification files into subject areas.
 - `specs/meta/format.md` — the structure and style conventions for specifications in this project.
+- `specs/meta/language.md` — language conventions for specifications and for written communication among agents and with the developer.
 - `specs/programming/code.md` — conventions for program implementations.
 - `specs/programming/content.md` — content requirements for programming specifications.
+- `specs/programming/dto.md` — the responsibilities and ownership of data transfer objects in a DTO-centric architecture.
+- `specs/programming/modules_and_roles.md` — how projects organize source files and code elements by module and role.
 - `specs/programming/postgresql.md` — conventions for relational schema design and SQL in PostgreSQL.
 - `specs/programming/tests.md` — conventions for organizing automated software tests and verifying program behavior.
 - `specs/python/language.md` — language-level implementation conventions for Python source code.
+- `specs/python/libs/pydantic.dto_foundation.md` — how projects use a shared Pydantic base class for their DTOs.
+- `specs/python/libs/pydantic.md` — conventions for defining and using Pydantic models.
 - `specs/python/libs/pytest.md` — conventions for writing Python tests with pytest.
 - `specs/python/tests.md` — conventions for writing and organizing Python tests.
 - `specs/typescript/libs/vitest.md` — conventions for writing tests with Vitest.

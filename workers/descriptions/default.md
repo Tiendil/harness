@@ -1,1 +1,1 @@
-Primary agent responsible for task completion, agent coordination, and communication with the developer.
+General-purpose fallback subagent. Choose this role only when no other available subagent is suitable for the task. Completes the assigned work and reports the result to the assigning agent.

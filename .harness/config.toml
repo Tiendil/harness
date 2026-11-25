@@ -12,6 +12,7 @@ index_goal_prefixes_to_remove = [
 
 fragments = [
   "agents.md.d/intro.md",
+  "agents.md.d/primary.md",
   "agents.md.d/principles/intro.md",
   "agents.md.d/principles/fundamentals.md",
   "agents.md.d/principles/design.md",
