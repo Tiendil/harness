@@ -86,6 +86,10 @@ project_doc_max_bytes = 1_048_576
 # budget. The expected benefit has not yet been verified against new sessions.
 tool_output_token_limit = 32_000
 
+[features.multi_agent_v2]
+enabled = true
+multi_agent_mode_hint_text = ""
+
 # Shared Playwright MCP server
 # ===========================
 # Enable this server through codex.enabled_mcp_servers in .harness/config.toml.
