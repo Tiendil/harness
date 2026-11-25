@@ -1,0 +1,104 @@
+# Shared Codex settings for the harness and target repositories.
+# Run mise run harness:codex:generate to regenerate .codex/config.toml.
+# Target repositories replace matching top-level values, including entire tables and arrays.
+# Write relative paths for the generated configuration's .codex/ directory.
+
+# We MUST guarantee that Codex reads the whole AGENTS.md without truncation.
+project_doc_max_bytes = 1_048_576
+
+# Tool-output budget
+# ==================
+#
+# What this setting controls
+# --------------------------
+# This is the token budget for each tool or function result that Codex retains
+# in the conversation history used by the model. If a result exceeds the budget,
+# Codex can cut it short, leaving the model without part of the information.
+# A larger budget allows longer results to remain available; it does not make
+# short results larger.
+#
+# Evidence from local session history
+# -----------------------------------
+# A session-history audit performed on 16 November 2026 covered the available
+# records from 4 July through 16 November 2026. Earlier history was unavailable.
+# Repeated copies of tool results in forked sessions and subagent history were
+# counted once.
+#
+# In user sessions, 8,809 of 107,448 recorded tool results (8.20%) were visibly
+# cut short. At least one such result appeared in 600 of the 664 user sessions
+# that contained usable tool results (90.36%). These counts include truncation
+# by different parts of the tool system, not just this configuration setting.
+#
+# A contextual review examined 200 affected threads: 130 user sessions and
+# 70 subagent threads. Among the user sessions, 107 of 130 (82.3%) showed work
+# to recover missing output. Across the full sample:
+#
+# - 133 threads (66.5%) showed recovery work, such as rereading files, repeating
+#   searches, or redisplaying stored results with a larger output budget.
+# - 64 threads (32.0%) showed no visible consequence.
+# - 3 threads (1.5%) lacked enough follow-up to determine the consequence.
+# - No thread had a confirmed incorrect outcome caused by omitted output.
+#   This does not establish that truncation never caused incorrect work.
+#
+# Recovery can be expensive even when the task eventually succeeds. In one
+# verified case, the agent reran the entire backend test suite because the
+# completion result was missing from the truncated output.
+#
+# Why we chose 32,000 tokens
+# -------------------------
+# Original output sizes were available for 7,254 truncated results from the
+# functions.exec wrapper, which can combine several tool results into one output.
+# Of these already-truncated results:
+#
+# - 93.6% originally contained no more than 32,000 tokens.
+# - 99.2% originally contained no more than 64,000 tokens.
+#
+# We use 32,000 as a practical starting point that accommodates most of those
+# observed sizes while limiting how much conversation space one result can use.
+# The audit could not determine which truncations were caused by this setting.
+# In particular, 93.6% is output-size coverage, not a predicted 93.6% reduction
+# in truncation or recovery work after this change.
+#
+# Expected benefit and tradeoffs
+# -----------------------------
+# We expect this larger budget to preserve more complete tool results in the
+# conversation, reducing rereads, retries, and repeated commands used to recover
+# missing information. Larger retained results also consume more of the model's
+# context window and may cause earlier compaction of the conversation.
+#
+# Individual tools and the functions.exec wrapper have their own output limits.
+# This setting cannot restore information already removed by those limits, so
+# their budgets must also be appropriate for the output the agent needs to read.
+#
+# TODO: Check the results after 200 new user sessions
+# -------------------------------------------------
+# Compare the new sessions with the audit baseline above:
+#
+# - Measure visible truncation per tool result and per user session.
+# - Review affected sessions for recovery work and incorrect outcomes, keeping
+#   cases with insufficient evidence separate.
+# - Check context usage and compaction frequency to assess the cost of retaining
+#   larger results.
+# - Account for differences in tasks, tools, model versions, and per-call output
+#   budgets before attributing a change to this setting.
+#
+# Use those observations to decide whether to keep 32,000 tokens or adjust the
+# budget. The expected benefit has not yet been verified against new sessions.
+tool_output_token_limit = 32_000
+
+[features.multi_agent_v2]
+enabled = true
+multi_agent_mode_hint_text = ""
+
+# Shared Playwright MCP server
+# ===========================
+# Enable this server through codex.enabled_mcp_servers in .harness/config.toml.
+# The shared mise task starts a temporary Docker container and stores browser
+# artifacts in the target repository's .session/playwright/ directory.
+[mcp_servers.playwright]
+command = "mise"
+args = ["run", "--quiet", "harness:mcp:playwright"]
+enabled = false
+startup_timeout_sec = 90
+tool_timeout_sec = 120
+default_tools_approval_mode = "approve"

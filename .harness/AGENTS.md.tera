@@ -1,2 +1,16 @@
+{% set agents_md = read_toml(path=cwd ~ "/.harness/config.toml")["agents_md"] -%}
+{% for fragment in agents_md.fragments %}
+{{ read_file(path=cwd ~ "/" ~ fragment) | trim }}
+{% endfor -%}
+{% for spec in agents_md.embedded_specs | default(value=[]) %}
+{% if loop.first -%}
+<!--
+The following specifications are included in full and apply within their stated scopes.
+-->
 
-{{- read_file(path="agents.md.d/intro.md") | trim -}}
+{% endif -%}
+<!-- BEGIN SPECIFICATION: {{ spec }} -->
+
+{{ read_file(path=cwd ~ "/" ~ spec) }}
+<!-- END SPECIFICATION: {{ spec }} -->
+{% endfor -%}
