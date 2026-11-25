@@ -38,7 +38,19 @@ def render_roles(project_root: Path) -> dict[str, str]:
             raise ValueError(f"Duplicate Codex role name: {name}")
 
         description = role.get("description")
-        if not isinstance(description, str) or not description.strip():
+        if isinstance(description, dict):
+            description_file = description.get("file")
+            if len(description) != 1 or not isinstance(description_file, str) or not description_file.strip():
+                raise ValueError(f"{label} ({name}) description table must contain a single non-empty 'file' path")
+            try:
+                description = (project_root / description_file).read_text(encoding="utf-8").strip()
+            except (OSError, ValueError) as error:
+                raise ValueError(
+                    f"{label} ({name}) could not read description file {description_file!r}: {error}"
+                ) from error
+            if not description:
+                raise ValueError(f"{label} ({name}) description file {description_file!r} is empty")
+        elif not isinstance(description, str) or not description.strip():
             raise ValueError(f"{label} ({name}) must have a non-empty description")
 
         fragments = role.get("fragments")
