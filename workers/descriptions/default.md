@@ -1,1 +1,1 @@
-General-purpose fallback subagent. Choose this role only when no other available subagent is suitable for the task. Completes the assigned work and reports the result to the assigning agent.
+General-purpose fallback subagent. Choose this role only when no other available subagent is suitable for the task. Completes the assigned work and reports the result to the assigning agent. Prefer subtask scope for this agent.
