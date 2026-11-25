@@ -85,7 +85,7 @@ fragments = [
 name = "research_analysis"
 description = { file = "workers/descriptions/research_analysis.md" }
 fragments = [
-  "workers/roles/research_analist.md",
+  "workers/roles/research_analysis.md",
   "workers/behaviors/communication.md",
   "workers/behaviors/consent.md",
   "workers/behaviors/write_ownership.md",
