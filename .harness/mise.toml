@@ -284,7 +284,8 @@ depends = [
   "harness:agents.md:generate",
   "harness:codex:generate",
   "harness:codex:roles:generate",
-  "harness:skills:install"
+  "harness:skills:install",
+  "harness:lock:check",
 ]
 
 [tasks."harness:lock:check"]
@@ -305,6 +306,5 @@ run = [
   "mise run harness:load",
   "mise run harness:specs:install",
   "mise run harness:workflows:install",
-  "mise run harness:generate",
-  "mise run harness:lock:record"
+  "mise run harness:generate"
 ]
